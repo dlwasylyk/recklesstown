@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recklesstown Honey: Homepage Mockup</title>
+<!-- SQUARESPACE: this whole <head> block (title/meta/font link) won't carry over into a
+     Code Block — Squarespace Code Blocks only render body-level content. Page title/meta
+     description belong in Page Settings > SEO instead, and this font <link> belongs in
+     Settings > Advanced > Code Injection > HEADER (loads site-wide, before first paint). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+<style>
+
+  /* ============================================================
+     THEME TOKENS
+     Palette pulled from Recklesstown's live site (their footer
+     inline styles use #d4a83a / #f5e6b8 on a dark ground, so
+     that's the gold + pale-gold + espresso combo used below).
+     Still placeholder pending client sign-off on playful vs.
+     elegant direction — but now grounded in their real colors
+     instead of a generic honey-gold guess.
+     ============================================================ */
+  :root{
+    --bg:            #FFFBF2;
+    --surface:       #FFFFFF;
+    --ink:           #2B1B12;
+    --footer-bg:     #3D2A1B;  /* footer only — a shade lighter than --ink for legibility */
+    --ink-soft:      #6B5A4C;
+    --line:          #EFE2C8;
+    --primary:       #D4A83A;   /* gold, matches recklesstownhoney.com footer links */
+    --primary-dark:  #B3872A;
+	--primary-darker:#9B7523;
+    --primary-pale:  #F5E6B8;   /* pale gold, matches their footer labels */
+    --primary-ink:   #2B1B12;
+    --accent:        #6B4226;
+    --footer-bright: #FAFFC2;   /* matches the footer logo's filter-brightened color (brightness/invert/sepia/saturate/hue-rotate) */
+    --font-display:  'DM Sans', sans-serif;  /* was Fraunces (serif) — testing a sans-serif heading font per request */
+    --font-body:     'Inter', sans-serif;
+    --font-eyebrow:  'Shadows Into Light', cursive;  /* handwritten accent for the small pre-header labels, per raw/natural direction — trial run, easy to revert to --font-body if it reads as too casual */
+    --radius:        18px;
+    --radius-lg:     28px;
+    --shadow:        0 10px 30px rgba(43,27,18,0.08);
+    --shadow-lg:     0 20px 50px rgba(43,27,18,0.14);
+    --shadow-btn-hover: 0 6px 14px rgba(43,27,18,0.20);  /* slimmer than --shadow-lg, specifically for button hover states */
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; text-decoration:none; }
+  ul{ list-style:none; }
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+  section{ position:relative; }
+  h1,h2,h3{ font-family: var(--font-display); font-weight: 600; letter-spacing:-0.01em; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family: var(--font-eyebrow); font-size:22px; font-weight:600; letter-spacing:0.01em;
+    /* No uppercase/tracking here on purpose — script faces like this one are drawn for
+       mixed case and read poorly (and a little unintentionally-comic) set in all caps
+       with letterspacing meant for a sans-serif label. Color darkened ~10% off
+       --primary-darker and weight bumped for a touch more contrast against the
+       cream background. */
+    color: #8C6920;
+    margin-bottom: 10px;
+  }
+
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    /* Tighter rounding than a full pill — still clearly rounded, less of a
+       stadium shape now that corners elsewhere on the page have been reined in. */
+    padding: 14px 28px; border-radius: 14px; font-weight:600; font-size:15px;
+    border: 2px solid transparent; cursor:pointer;
+    transition: transform .15s ease, box-shadow .15s ease,
+      background-color .16s cubic-bezier(.4,0,.2,1), color .16s cubic-bezier(.4,0,.2,1),
+      border-color .16s cubic-bezier(.4,0,.2,1), filter .16s cubic-bezier(.4,0,.2,1);
+    white-space:nowrap;
+  }
+  .btn:hover{ transform: translateY(-2px); }
+  .btn-primary{ background: var(--primary); color: var(--primary-ink); box-shadow: var(--shadow); }
+  .btn-primary:hover{ box-shadow: var(--shadow-btn-hover); filter: brightness(1.1); }
+  .btn-outline{ background: var(--surface); border-color: var(--line); color: var(--ink); }
+  .btn-outline:hover{ background: var(--primary-dark); border-color: var(--primary-pale); }
+  .btn-outline-light{ background: transparent; border-color: rgba(255,255,255,0.6); color:#fff; }
+  .btn-outline-light:hover{ background: rgba(255,255,255,0.15); }
+  .btn-sm{ padding: 8px 18px; font-size:13px; }
+
+  /* ---------- Honeycomb texture (subtle, reused across "splashier" sections) ----------
+     Pattern defs live once in the hidden SVG right after <body>; every section that
+     wants the texture drops a <div class="honeycomb-svg"><svg>...fill="url(#id)"</svg></div>
+     absolutely positioned behind its content. */
+  .honeycomb-svg{ position:absolute; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+
+  /* Hero: honeycomb now fills the entire hero section (no wave/band cutoff).
+     Kept light (low opacity) since body copy and the events card sit on top. */
+  .hero-hexband{ position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0.28; }
+  .hero-hexband svg{ display:block; width:100%; height:100%; }
+
+  /* Reusable full-bleed FILLED honeycomb layer (darker/subdued variant) — now used
+     behind the quote/review section. Footer went the other way: flat solid color,
+     no texture, to keep the new Wholesale card area clean and easy to read. */
+  .hexcomb-full{ position:absolute; inset:0; z-index:0; pointer-events:none; opacity:0.10; }  /* muted further from 0.16 — still a touch busy at that level */
+  .hexcomb-full svg{ display:block; width:100%; height:100%; }
+
+  /* ---------- Header ---------- */
+  header{
+    position: sticky; top:0; z-index:50;
+    background: rgba(255,251,242,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav{
+    display:grid; grid-template-columns: 1fr auto 1fr; align-items:center; gap:20px;
+    padding: 14px 0;
+  }
+  .nav-left, .nav-right{ display:flex; align-items:center; gap:30px; font-weight:500; font-size:15px; }
+  .nav-left{ justify-self:start; }
+  .nav-right{ justify-self:end; }
+  .nav a.link{
+    position:relative; opacity:0.85; padding-bottom:5px;
+    transition: opacity .2s ease, color .2s ease;
+  }
+  .nav a.link::after{
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2px;
+    background: var(--primary-dark); border-radius:2px;
+    transform: scaleX(0); transform-origin: right center;
+    transition: transform .25s ease;
+  }
+  .nav a.link:hover{ opacity:1; color: var(--primary-dark); }
+  .nav a.link:hover::after{ transform: scaleX(1); transform-origin: left center; }
+  .nav-logo{ justify-self:center; display:flex; align-items:center; }
+  .nav-logo img{ height:50px; width:auto; }
+  .nav-logo-fallback{
+    display:none; align-items:center; gap:8px; font-family:var(--font-display); font-weight:700; font-size:19px;
+  }
+  .nav-logo-fallback svg{ width:30px; height:30px; }
+  .nav-toggle{ display:none; }
+
+  /* ---------- Hero (Events) ---------- */
+  .hero{
+    overflow:hidden;
+    background:
+      radial-gradient(1200px 500px at 15% -10%, rgba(212,168,58,0.22), transparent 60%),
+      linear-gradient(180deg, #FFF6DE 0%, var(--bg) 100%);
+    padding: 88px 0 70px;
+  }
+  .hero-inner{
+    display:grid; grid-template-columns: 1.05fr 0.95fr; gap:56px; align-items:center;
+  }
+  .hero h1{ font-size: clamp(36px, 4.6vw, 56px); line-height:1.05; margin-bottom:20px; }
+  .hero p.lede{ font-size:18px; color: var(--ink-soft); max-width: 52ch; margin-bottom: 30px; }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:34px; }
+  .hero-stats{ display:flex; gap:34px; flex-wrap:wrap; }
+  .hero-stats div{ font-size:13px; color: var(--ink-soft); }
+  .hero-stats strong{ display:block; font-family: var(--font-display); font-size:24px; color: var(--ink); }
+
+  .hero-art{ position:relative; }
+  .hero-card{
+    background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg);
+    padding: 26px; border: 1px solid var(--line);
+  }
+  .hero-card-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+  .hero-card-top .eyebrow{ margin:0; }
+  .next-event{
+    display:flex; gap:16px; align-items:center; padding: 14px; border-radius: 14px;
+    background: #FFF8E9; border: 1px solid var(--line); margin-bottom: 12px;
+  }
+  .next-event:last-child{ margin-bottom:0; }
+  /* Sized to the same point-to-point : flat-to-flat ratio as the honeycomb
+     cells in hex-fill-gold (38:32.9, ~1.155:1) instead of a square box, and
+     the clip-path's flat edge widened from 60% to 50% of the box to match —
+     the hex-fill-gold cell's own flat top edge is exactly half its width.
+     Reads as the same hexagon, just bigger, rather than a thinner one. */
+  .date-chip{
+    flex: 0 0 auto; width:69px; height:60px; background: var(--primary);
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    color: var(--primary-ink); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family: var(--font-display); font-weight:700; line-height:1.1;
+  }
+  .date-chip span{ font-size:12px; font-weight:600; text-transform:uppercase; font-family: var(--font-body); }
+  .date-chip strong{ font-size:22px; }
+  .event-info{ min-width:0; }
+  .event-info-head{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:2px; }
+  .event-info h4{ font-size:15px; font-weight:600; }
+  .event-info p{ font-size:13px; color: var(--ink-soft); }
+  /* Small pill labeling the kind of presence for that date (booth, tour, launch,
+     etc.) — content-driven, no fixed color per type, so a client update never
+     has to touch CSS to add a new tag. */
+  .event-tag{
+    display:inline-flex; align-items:center; flex:0 0 auto;
+    background: var(--primary-pale); color: var(--primary-darker);
+    font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.03em;
+    padding: 3px 9px; border-radius:999px; line-height:1.4;
+  }
+  .event-location{ font-size:13px; color: var(--ink-soft); }
+
+  /* ---------- Section headings ---------- */
+  .section-head{ max-width: 620px; margin-bottom: 44px; }
+  .section-head.center{ margin-left:auto; margin-right:auto; text-align:center; }
+  .section-head h2{ font-size: clamp(28px, 3.2vw, 38px); margin-bottom:14px; }
+  .section-head p{ color: var(--ink-soft); font-size:16px; }
+
+  /* ---------- Store ---------- */
+  .store{ padding: 90px 0; background: var(--surface); border-bottom:1px solid var(--line); }
+  /* Honeycomb "spillover": the hero's honeycomb texture dips down into the top of
+     this section in a shallow convex curve — deepest at the left/right edges of the
+     screen, rising smoothly to meet the flat section edge at center (roughly one
+     header's-height of drop at the sides). The fill layer is clipped (not stretched)
+     to that shape, using the exact same unscaled hex pattern as the hero above it —
+     a tiny inline script measures the hero's real rendered height on load/resize and
+     phase-shifts the pattern so the hexagons keep tiling continuously across the
+     seam, reading as one uninterrupted honeycomb rather than two disconnected ones.
+     Sits behind .wrap (z-index:1 below) so copy is never obscured. */
+  .store-hexcurve{
+    position:absolute; top:0; left:0; width:100%; height:100px; z-index:0; pointer-events:none;
+    background: var(--bg);
+    clip-path: url(#store-dip-clip);
+  }
+  .store-hexcurve svg{ display:block; width:100%; height:100%; opacity:0.28; }
+  .store-hexborder{ position:absolute; top:0; left:0; width:100%; height:100px; z-index:0; pointer-events:none; }
+  .store-hexborder svg{ display:block; width:100%; height:100%; }
+  .store-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap:24px; }
+  .product-card{
+    border-radius: var(--radius); overflow:hidden; background: var(--bg); border:1px solid var(--line);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .product-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .product-thumb{ aspect-ratio: 1/1; overflow:hidden; background:#F3E6C4; } /* square — matches the jar renders 1:1, no cropping */
+  .product-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .product-body{ padding:20px; }
+  .product-tag{ font-size:12px; font-weight:600; color: var(--primary-dark); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+  .product-body h3{ font-size:17px; margin-bottom:6px; }
+  .product-body p{ font-size:14px; color: var(--ink-soft); margin-bottom:16px; }
+  .product-foot{ display:flex; align-items:center; justify-content:space-between; }
+  .price{ font-family: var(--font-display); font-weight:600; font-size:18px; }
+  .store-cta{ text-align:center; margin-top:40px; }
+
+  /* ---------- Feature row: plain side-by-side image + copy, no overlapping
+     panel — swapped back in for "Get Inside the Hive" and "Meet the Makers"
+     per your earlier feedback that the dark overlap box didn't suit these
+     photos. Alternates image-left/image-right down the page via --reverse. */
+  .story-section{ padding: 100px 0; }
+  .feature-row{
+    display:grid; grid-template-columns: 1fr 1fr; gap:56px; align-items:center;
+    margin-bottom: 90px;
+  }
+  .feature-row:last-child{ margin-bottom:0; }
+  .feature-row--reverse .feature-media{ order:2; }
+  .feature-media{
+    border-radius: var(--radius-lg); overflow:hidden; box-shadow: var(--shadow-lg);
+    aspect-ratio: 4/3;
+  }
+  .feature-media img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .feature-content h3{ font-size: clamp(22px,2.6vw,28px); margin-bottom:12px; line-height:1.15; }
+  .feature-content p{ color: var(--ink-soft); font-size:16px; margin-bottom:24px; }
+
+  /* Get Inside the Hive is a single centered feature row */
+  .promo .feature-row{ margin-bottom:0; }
+  /* Same white mat-border treatment as the Meet the Makers photos, so this
+     photo reads as part of the same family instead of a plain full-bleed
+     crop. box-sizing:border-box keeps the frame's outer size unchanged —
+     it just insets the image within it. */
+  .promo .feature-media{ border: 7px solid var(--surface); }
+
+  /* Swapped the hexagon-outline texture for a flat pale-gold background plus a
+     handful of the brand's own bee vector, in white — same "which honeycomb
+     pattern is this" motif, just simplified to a solid color and a friendlier
+     icon instead of a geometric tile. */
+  /* Darkened a step off --primary-pale so the white bees actually stand out
+     against it, instead of nearly matching. */
+  .promo{ background: #DDCFA6; }
+  .promo-bees{ position:absolute; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+  /* Four individual bees (split out of the original 5-bee cluster graphic),
+     hand-placed at irregular positions, sizes, rotations and opacities
+     instead of one tile repeated on a grid — reads as a few bees that
+     wandered into frame rather than wallpaper. Each keeps the thin tan
+     outline over an otherwise-white body from the section background pass. */
+  .promo-bee{ position:absolute; height:auto; pointer-events:none; }
+  .promo-bee--1{ width:52px; top:6%;  left:9%;  opacity:0.4;  transform: rotate(-18deg); }
+  .promo-bee--2{ width:70px; top:22%; left:71%; opacity:0.5;  transform: rotate(12deg); }
+  .promo-bee--3{ width:44px; top:68%; left:32%; opacity:0.35; transform: rotate(24deg); }
+  .promo-bee--4{ width:60px; top:78%; left:85%; opacity:0.45; transform: rotate(-8deg); }
+  .promo-bee--5{ width:50px; top:46%; left:4%;  opacity:0.38; transform: rotate(-25deg); }
+  .promo-bee--6{ width:58px; top:90%; left:22%; opacity:0.42; transform: rotate(15deg); }
+
+  /* Meet the Makers: one wide card per row, photo embedded inside it and
+     alternating sides (right / left / right) rather than a separate image
+     element lying beside the card. The photo sits on its own elevated
+     layer with a real "printed photo" treatment — soft mat border, diffuse
+     shadow, gentle rotation — varied a little per row (different mat,
+     different tilt direction, small vertical nudge) so the three read as a
+     small stack of real prints rather than the same component repeated.
+     The deco vector lives on the text side of the card, in the space the
+     photo doesn't cover, so it's always visible instead of hidden under it. */
+  #story{ overflow:hidden; }
+  #story .mcards{ display:flex; flex-direction:column; gap:64px; }
+  #story .mcard{
+    position:relative; overflow:hidden;
+    background: linear-gradient(135deg, #FFF8E9 0%, #FFFFFF 100%);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 56px;
+  }
+  #story .mcard-inner{
+    position:relative; z-index:2;
+    display:flex; align-items:center; gap:48px;
+  }
+  #story .mcard--reverse .mcard-inner{ flex-direction: row-reverse; }
+  #story .mcard-text{ flex: 1 1 54%; }
+  #story .mcard-text h3{ font-size: clamp(22px,2.6vw,28px); margin-bottom:12px; line-height:1.15; }
+  #story .mcard-text p{ color: var(--ink-soft); font-size:16px; margin-bottom:24px; }
+  /* Solid gold CTA so it pops against the light card, in place of the
+     site-wide outline button. Sized up slightly and bolded so the label
+     reads clearly against the gold. */
+  #story .mcard-text .btn{
+    background: var(--primary); border-color: var(--primary); color: var(--primary-ink);
+    box-shadow: var(--shadow); font-size:17px; font-weight:700;
+  }
+  #story .mcard-text .btn:hover{ box-shadow: var(--shadow-btn-hover); filter: brightness(1.1); }
+
+  #story .mcard-photo{ flex: 1 1 40%; position:relative; z-index:3; }
+  #story .mcard-photo img{
+    width:100%; aspect-ratio: 4/3; object-fit:cover; border-radius:6px;
+    box-shadow: 0 24px 46px -18px rgba(43,27,18,0.32), 0 6px 14px rgba(43,27,18,0.10);
+  }
+
+  #story .mcard-deco{ position:absolute; z-index:1; height:auto; opacity:0.16; pointer-events:none; }
+  #story .mcard--branch .mcard-deco{ width:34%; top:6%; left:3%; }
+  #story .mcard--honey .mcard-deco{ width:20%; bottom:4%; right:3%; transform: rotate(-8deg); }
+  #story .mcard--boxes .mcard-deco{ width:36%; bottom:6%; left:3%; }
+
+  /* Per-row photo variety — different mat treatment, rotation and a
+     small vertical nudge each time. */
+  #story .mcard--branch .mcard-photo{ margin-top:16px; }
+  #story .mcard--branch .mcard-photo img{ border: 7px solid var(--surface); transform: rotate(-1.6deg); }
+  #story .mcard--honey .mcard-photo{ margin-top:-12px; }
+  #story .mcard--honey .mcard-photo img{ border: 7px solid var(--surface); transform: rotate(2.1deg); }
+  #story .mcard--boxes .mcard-photo{ margin-top:6px; }
+  #story .mcard--boxes .mcard-photo img{ border: 7px solid #FFF8E9; transform: rotate(-2.4deg); }
+
+  /* ---------- Testimonial ---------- */
+  .quote-band{
+    background: var(--ink); color:#fff; padding: 90px 0; text-align:center; overflow:hidden;
+    clip-path: url(#quote-band-clip); /* gentle curve on the top and bottom edges — see defs below */
+  }
+  .quote-band blockquote{
+    position:relative; z-index:1;
+    font-family: var(--font-display); font-size: clamp(22px, 2.6vw, 30px); font-weight:500;
+    max-width: 780px; margin: 0 auto 20px; line-height:1.4;
+  }
+  .quote-band cite{ position:relative; z-index:1; font-style:normal; font-size:14px; opacity:0.75; }
+
+  /* ---------- Newsletter ---------- */
+  .newsletter{ padding: 90px 0; }
+  .newsletter-box{
+    background: linear-gradient(135deg, #FFF3D6, #FFFBF2);
+    border:1px solid var(--line); border-radius: var(--radius-lg); padding: 56px;
+    display:grid; grid-template-columns: 1.1fr 0.9fr; gap:40px; align-items:center;
+    box-shadow: var(--shadow);
+  }
+  .newsletter h2{ font-size: clamp(24px, 2.8vw, 32px); margin-bottom:10px; }
+  .newsletter p{ color: var(--ink-soft); }
+  .signup-form{ display:flex; gap:10px; }
+  .signup-form input{
+    flex:1; padding:14px 18px; border-radius: 999px; border: 1px solid var(--line);
+    font-family: var(--font-body); font-size:15px; background:#fff;
+  }
+  .signup-form input:focus{ outline:2px solid var(--primary); }
+  .fine-print{ font-size:12px; color: var(--ink-soft); margin-top:10px; }
+
+  /* ---------- Footer (flat dark background, no texture) ---------- */
+  footer{ position:relative; background: var(--footer-bg); color: #FDF6E7; padding: 64px 0 28px; }
+  .footer-top{ position:relative; z-index:1; display:grid; grid-template-columns: 1.6fr 1fr; gap:56px; margin-bottom:48px; align-items:start; }
+  .footer-logo{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .footer-logo img{ height:56px; width:auto; filter: brightness(0) invert(1) sepia(1) saturate(4) hue-rotate(5deg); }
+  .footer-logo-fallback{ display:none; align-items:center; gap:8px; font-family:var(--font-display); font-weight:700; font-size:22px; color:#fff; }
+  footer p{ color: var(--footer-bright); font-size:14px; max-width:42ch; }
+  footer h4{ font-size:13px; text-transform:uppercase; letter-spacing:.08em; margin-bottom:16px; color: var(--primary-pale); font-weight:600; }
+
+  .footer-badges{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:22px; }
+  .footer-badge{
+    display:inline-flex; align-items:center; gap:6px; padding:7px 13px; border-radius:999px;
+    border:1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.05);
+    font-size:12px; font-weight:600; color: var(--footer-bright); letter-spacing:.02em;
+  }
+  .footer-badge svg{ width:13px; height:13px; color: var(--footer-bright); flex:0 0 auto; }
+
+  .socials{ display:flex; gap:12px; }
+  .socials a{
+    width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,0.22);
+    display:flex; align-items:center; justify-content:center; transition: background .15s ease;
+    color: var(--footer-bright);
+  }
+  .socials a:hover{ background: rgba(255,255,255,0.12); }
+  .socials svg{ width:17px; height:17px; }
+
+  .footer-mission{ font-size:14px; color: var(--footer-bright); max-width:42ch; margin-bottom:22px; }
+
+  /* Wholesale: right-aligned card with real buttons instead of a plain link list */
+  .footer-wholesale{ display:flex; justify-content:flex-end; }
+  .footer-wholesale-card{
+    background: var(--bg); color: var(--ink); border-radius: var(--radius-lg);
+    padding: 26px; box-shadow: var(--shadow-lg); max-width: 300px; width:100%;
+  }
+  .footer-wholesale-card h4{ color: var(--ink); margin-bottom:16px; }
+  .footer-wholesale-card .btn{ width:100%; display:flex; }
+  .footer-wholesale-card .btn + .btn{ margin-top:10px; }
+
+  .footer-bottom{
+    position:relative; z-index:1;
+    border-top:1px solid rgba(255,255,255,0.14); padding-top:24px;
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    font-size:13px; color:#C2AD87;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px){
+    .hero-inner{ grid-template-columns: 1fr; }
+    .store-grid{ grid-template-columns: 1fr 1fr; }
+    .footer-top{ grid-template-columns: 1fr; }
+    .newsletter-box{ grid-template-columns: 1fr; }
+    .nav-left, .nav-right{ display:none; }
+    .nav{ grid-template-columns: 1fr auto; }
+  }
+  @media (max-width: 700px){
+    .feature-row{ grid-template-columns: 1fr; gap:24px; margin-bottom:56px; }
+    .feature-row--reverse .feature-media{ order:0; }
+    #story .mcards{ gap:40px; }
+    #story .mcard{ padding:32px; }
+    #story .mcard-inner, #story .mcard--reverse .mcard-inner{ flex-direction:column; align-items:stretch; gap:28px; }
+    #story .mcard-photo{ margin-top:0 !important; }
+    #story .mcard-photo img{ transform:none !important; }
+  }
+  @media (max-width: 600px){
+    .store-grid{ grid-template-columns: 1fr; }
+    .signup-form{ flex-direction:column; }
+    .hero-ctas{ flex-direction:column; align-items:stretch; }
+    .hero-ctas .btn{ width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     MOCKUP NOTES (remove before handoff):
+     - Images now load from the local assets/ folder (this file lives
+       in the project root, sibling to assets/). Logo, hero/footer
+       honeycomb, and the "Meet the Makers" trio use real photos.
+       .5lb/1lb/2lb product cards use honey_halflb/honey_1lb/honey_2lb
+       with the corrected Chestertown, NJ labels.
+     - Header: logo centered with nav split left/right, matching
+       pikeplacefish.com's layout.
+     - "Get Inside the Hive" and "Meet the Makers": plain "feature row"
+       component — one photo, one copy block, side by side, alternating
+       left/right down the page. Tried a Pike Place-style dark overlapping
+       panel here first, but it didn't suit these particular photos, so
+       it's back to a simple split layout. Product photos stayed a plain
+       3-up card grid throughout (never used the overlap treatment).
+     - Honeycomb texture, two treatments:
+         1) Experience promo band keeps a subtle hexagon-OUTLINE
+            pattern spread across the whole section (low-opacity,
+            reads as texture, not a graphic).
+         2) Hero, quote/review band, and footer use the FILLED
+            two-tone hex pattern across their entire section (no
+            band/wave cutoff, no fade mask) — just a flat low-opacity
+            layer so text on top stays readable. Footer itself is
+            flat/solid with NO honeycomb (moved to the quote band
+            instead, per your last round of notes).
+       All pattern defs (including the hex tile) live once in the
+       hidden <svg> right below <body>, reused via fill="url(#id)".
+     - Footer layout follows the Cal.com reference you shared: one
+       wide left column (logo, mission statement, placeholder cert
+       badges, social icons) plus a right-aligned "Wholesale" card
+       with real buttons. Cert badges are text-only placeholders (no
+       fabricated logos/claims) — swap in the real ones when ready.
+       Social icons are simplified brand glyphs — good enough for
+       review, but swap for official brand assets before this ships.
+     - Palette is still a placeholder in the sense that the client
+       hasn't confirmed playful vs. elegant — but the gold/pale-gold
+       values now come directly from recklesstownhoney.com's own
+       footer styles, so this should already feel "on brand."
+     - Heading font is DM Sans (was Fraunces) — a quick swap to try
+       a sans-serif heading look; trivial to revert via --font-display.
+
+     SQUARESPACE MIGRATION — what to know going in:
+     - Code Blocks accept plain HTML/CSS(<style>)/JS(<script>), so
+       this design is technically portable, but a Code Block only
+       renders BODY content — <!DOCTYPE>/<html>/<head>/<title>/<meta>
+       get stripped if pasted in directly. Page title + meta
+       description belong in Page Settings > SEO; the Google Fonts
+       <link> belongs in Settings > Advanced > Code Injection > HEADER
+       (site-wide, loads before paint — see note up in <head>).
+     - The hidden <svg><defs> block right below <body> (the honeycomb
+       pattern + hex tile) has to physically sit in a Code Block ON
+       THE PAGE, not in Header/Footer Code Injection — an <svg> isn't
+       valid inside <head>, and every section referencing url(#...)
+       needs that <defs> to already be in the rendered DOM above it.
+       Simplest: make it the very first Code Block on the page.
+     - Custom CSS (everything in the <style> tag) is cleanest moved
+       to Design > Custom CSS as one block, rather than duplicated
+       inside every Code Block — Squarespace's Custom CSS panel has
+       a 128,000-character limit, this file is well under that.
+     - The product cards are static — fine for a marketing homepage,
+       but if you want real add-to-cart, those should become
+       Squarespace's native Product/Summary Blocks (Commerce plan)
+       instead, pulling from an actual Products collection.
+     - The newsletter form (<form onsubmit="return false">) is
+       decorative. Swap it for Squarespace's native Newsletter Block
+       or a Form Block wired to Mailchimp/Klaviyo/etc. for it to
+       actually collect emails.
+     - Images here are plain <img> tags for the mockup; production
+       images should go through Squarespace's own asset manager
+       (Image Blocks) so they get automatic responsive srcset/CDN —
+       hand-written img tags pointing at a local assets folder won't
+       get that.
+     - Bonus assets sitting in assets/ but not used on this page yet:
+       IMG_6019 (apiary field), honey.jpg, a few 150x150 line icons,
+       and briefcase.svg/training.svg (probably meant for Wholesale or
+       Experiences sub-pages, not this homepage).
+     ============================================================ -->
+
+<!-- Hidden defs: honeycomb pattern, referenced via url(#honeycomb-dark) / url(#honeycomb-light) -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <pattern id="honeycomb-dark" width="56" height="100" patternUnits="userSpaceOnUse" patternTransform="scale(0.9)">
+      <path d="M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100" fill="none" stroke="#6B4226" stroke-width="1.4" stroke-opacity="0.14"></path>
+      <path d="M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34" fill="none" stroke="#6B4226" stroke-width="1.4" stroke-opacity="0.14"></path>
+    </pattern>
+    <pattern id="honeycomb-light" width="56" height="100" patternUnits="userSpaceOnUse" patternTransform="scale(0.9)">
+      <path d="M28 66L0 50L0 16L28 0L56 16L56 50L28 66L28 100" fill="none" stroke="#F5E6B8" stroke-width="1.4" stroke-opacity="0.16"></path>
+      <path d="M28 0L28 34L0 50L0 84L28 100L56 84L56 50L28 34" fill="none" stroke="#F5E6B8" stroke-width="1.4" stroke-opacity="0.16"></path>
+    </pattern>
+
+    <!-- True honeycomb: solid flat-top hexagons with a deliberate gap between cells
+         (each cell drawn at r=19 against a spacing radius of 22, so neighbors don't
+         touch), tiling seamlessly in both directions. Two-tone gold, brand-subtle. -->
+    <pattern id="hex-fill-gold" width="66" height="38.105" patternUnits="userSpaceOnUse">
+      <polygon points="3,19.05 12.5,2.6 31.5,2.6 41,19.05 31.5,35.5 12.5,35.5" fill="#D4A83A" fill-opacity="0.55"></polygon>
+      <polygon points="36,0 45.5,-16.45 64.5,-16.45 74,0 64.5,16.45 45.5,16.45" fill="#B3872A" fill-opacity="0.4"></polygon>
+      <polygon points="36,38.105 45.5,21.65 64.5,21.65 74,38.105 64.5,54.55 45.5,54.55" fill="#B3872A" fill-opacity="0.4"></polygon>
+      <polygon points="-30,0 -20.5,-16.45 -1.5,-16.45 8,0 -1.5,16.45 -20.5,16.45" fill="#B3872A" fill-opacity="0.4"></polygon>
+      <polygon points="-30,38.105 -20.5,21.65 -1.5,21.65 8,38.105 -1.5,54.55 -20.5,54.55" fill="#B3872A" fill-opacity="0.4"></polygon>
+    </pattern>
+
+    <!-- Convex "spillover" dip for the store section's top edge: deep at the left/right
+         edges (0.78 of the box height, ~header height), rising on a smooth curve to
+         touch flush (0) exactly at center. objectBoundingBox units so this always maps
+         onto store-hexcurve's real box, at any viewport width, without distortion. -->
+    <clipPath id="store-dip-clip" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 L0,0.78 Q0.5,-0.78 1,0.78 L1,0 Z"></path>
+    </clipPath>
+
+    <!-- Quote band: a gentle inward scoop on the top and bottom edges (the whole
+         section — background, hex pattern, and text — gets clipped together as
+         one unit, so the honeycomb pattern is never stretched or re-tiled, just
+         given a softer silhouette). Shallow on purpose (~4.5% of the section's
+         height) so it stays well clear of the quote text. -->
+    <clipPath id="quote-band-clip" clipPathUnits="objectBoundingBox">
+      <path d="M0,0 Q0.5,0.09 1,0 L1,1 Q0.5,0.91 0,1 Z"></path>
+    </clipPath>
+  </defs>
+</svg>
+
+<header>
+  <div class="wrap nav">
+    <div class="nav-left">
+      <a href="#shop" class="link">Shop</a>
+      <a href="#story" class="link">Our Story</a>
+    </div>
+    <div class="nav-logo">
+      <img src="assets/recklesstown_logo.webp"
+           alt="Recklesstown Honey Company"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <span class="nav-logo-fallback">
+        <svg viewBox="0 0 40 40" fill="none"><path d="M20 2L36 11V29L20 38L4 29V11L20 2Z" fill="#D4A83A" stroke="#B3872A" stroke-width="1.5"/><path d="M20 10L28 14.5V23.5L20 28L12 23.5V14.5L20 10Z" fill="#FFFBF2"/></svg>
+        Recklesstown Honey
+      </span>
+    </div>
+    <div class="nav-right">
+      <a href="#experiences" class="link">Experiences</a>
+      <a href="#" class="link">Contact</a>
+      <a href="#shop" class="btn btn-primary btn-sm">Shop Now</a>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO — real headline, events-forward side panel ================= -->
+<section class="hero">
+  <div class="hero-hexband"><svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#hex-fill-gold)"></rect></svg></div>
+  <div class="wrap hero-inner" style="position:relative; z-index:1;">
+    <div>
+      <div class="eyebrow">Recklesstown, NJ &middot; Small-Batch &amp; Raw</div>
+      <h1>Happy Bees Make The Best Honey.</h1>
+      <p class="lede">Raw honey from Burlington, Ocean, and Monmouth Counties, harvested with care and bottled just the way the bees intended.
+	  </p>
+      <div class="hero-ctas">
+        <a href="#shop" class="btn btn-primary">Shop Our Honey</a>
+        <a href="#experiences" class="btn btn-outline">Book an Experience</a>
+      </div>
+      <div class="hero-stats">
+        <div><strong>2021</strong>Founded by Brian &amp; Matt</div>
+        <div><strong>3</strong>NJ counties, several apiaries</div>
+        <div><strong>Raw</strong>Unfiltered, unblended</div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <div class="hero-card">
+        <div class="hero-card-top">
+          <div class="eyebrow">Where to find us</div>
+          <a href="#" style="font-size:13px; font-weight:600; color:var(--primary-dark);">All dates &rarr;</a>
+        </div>
+        <!-- Each .next-event is one self-contained record (date, title, tag,
+             location) with the same fields mirrored as data-* attributes, so
+             this list can later be generated from a client-editable source
+             (a Squarespace events collection, a small JSON/CSV feed, etc.)
+             by looping this exact markup instead of hand-editing HTML. -->
+        <div class="next-event" data-event-month="Aug" data-event-day="02" data-event-title="Farmers Market Pop-Up" data-event-tag="Booth + Presentation" data-event-location="Rancocas Woods Farmers Market, Mt. Laurel, NJ">
+          <div class="date-chip"><span>Aug</span><strong>02</strong></div>
+          <div class="event-info">
+            <div class="event-info-head">
+              <h4>Beekeeping in Jersey</h4>
+              <span class="event-tag">Booth + Presentation</span>
+            </div>
+            <p class="event-location">Rancocas Woods Farmers Market, Mt. Laurel, NJ</p>
+          </div>
+        </div>
+        <div class="next-event" data-event-month="Aug" data-event-day="16" data-event-title="Hive Tour &amp; Tasting Experience" data-event-tag="Tour Experience" data-event-location="Burlington County Hive">
+          <div class="date-chip"><span>Aug</span><strong>16</strong></div>
+          <div class="event-info">
+            <div class="event-info-head">
+              <h4>Hive &amp; Honey Event</h4>
+              <span class="event-tag">Tour Experience</span>
+            </div>
+            <p class="event-location">Burlington County Hive</p>
+          </div>
+        </div>
+        <div class="next-event" data-event-month="Sep" data-event-day="13" data-event-title="Fall Honey Harvest" data-event-tag="Product Launch" data-event-location="All Locations">
+          <div class="date-chip"><span>Sep</span><strong>13</strong></div>
+          <div class="event-info">
+            <div class="event-info-head">
+              <h4>Fall Honey Harvest</h4>
+              <span class="event-tag">Product Launch</span>
+            </div>
+            <p class="event-location">All Locations</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STORE =================
+     SQUARESPACE: static cards for now. If real checkout/cart is wanted,
+     rebuild this grid as native Product/Summary Blocks (Commerce plan)
+     instead — see MOCKUP NOTES above <body>. -->
+<section class="store" id="shop">
+  <div class="store-hexcurve" aria-hidden="true">
+    <svg width="100%" height="100%"><rect class="hex-rect" width="100%" height="100%" fill="url(#hex-fill-gold)"></rect></svg>
+  </div>
+  <div class="store-hexborder" aria-hidden="true">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none">
+      <path d="M0,78 Q720,-78 1440,78" fill="none" stroke="#EFE2C8" stroke-width="2"></path>
+    </svg>
+  </div>
+  <div class="wrap" style="position:relative; z-index:1;">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center; display:flex;">Our Honey</div>
+      <h2>Locally Sourced in New Jersey</h2>
+      <p>From our hives to your table: raw and unadulterated, exactly as the bees made it.</p>
+    </div>
+    <div class="store-grid">
+      <div class="product-card">
+        <div class="product-thumb">
+          <img src="assets/honey_halflb.png" alt=".5 lb. Classic Honey Jar">
+        </div>
+        <div class="product-body">
+          <div class="product-tag">Starter size</div>
+          <h3>.5 lb. Classic Honey Jar</h3>
+          <p>Perfect for your first taste.</p>
+          <div class="product-foot"><span class="price">$7.00</span><a href="#" class="btn btn-outline btn-sm">Add to Cart</a></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb">
+          <img src="assets/honey_1lb.png" alt="Local Spring Wildflower Honey – 1lb Jar">
+        </div>
+        <div class="product-body">
+          <div class="product-tag">Best Seller</div>
+          <h3>Spring Wildflower Honey, 1.0 lb Jar</h3>
+          <p>Bright, floral, and harvested close to home.</p>
+          <div class="product-foot"><span class="price">$15.00</span><a href="#" class="btn btn-outline btn-sm">Add to Cart</a></div>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-thumb">
+          <img src="assets/honey_2lb.png" alt="Local Spring Wildflower Honey – 2lb Jar">
+        </div>
+        <div class="product-body">
+          <div class="product-tag">Best value</div>
+          <h3>Spring Wildflower Honey, 2.0 lb Jar</h3>
+          <p>Same small-batch, but twice the size.</p>
+          <div class="product-foot"><span class="price">$28.00</span><a href="#" class="btn btn-outline btn-sm">Add to Cart</a></div>
+        </div>
+      </div>
+    </div>
+    <div class="store-cta">
+      <a href="#" class="btn btn-primary">Browse All Products</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EXPERIENCE PROMO — plain image + copy, no overlap panel ================= -->
+<section class="story-section promo" id="experiences">
+  <div class="promo-bees" aria-hidden="true">
+    <img class="promo-bee promo-bee--1" src="assets/bee-1.png" alt="">
+    <img class="promo-bee promo-bee--2" src="assets/bee-2.png" alt="">
+    <img class="promo-bee promo-bee--3" src="assets/bee-4.png" alt="">
+    <img class="promo-bee promo-bee--4" src="assets/bee-5.png" alt="">
+    <img class="promo-bee promo-bee--5" src="assets/bee-3.png" alt="">
+    <img class="promo-bee promo-bee--6" src="assets/bee-1.png" alt="">
+  </div>
+  <div class="wrap" style="position:relative; z-index:1;">
+    <div class="feature-row">
+      <div class="feature-media">
+        <img src="assets/IMG_5072-1-scaled-rmnf5nhb5xkq029nvklwwh1prksfi9ersx3teeqe0g.webp" alt="Group beekeeping experience at Recklesstown Honey, holding a honeycomb frame">
+      </div>
+      <div class="feature-content">
+        <div class="eyebrow">Beekeeping Experiences</div>
+        <h3>Get Inside the Hive.</h3>
+        <p>Suit up, open a hive, and discover what ten thousand bees can teach you.</p>
+        <a href="#" class="btn btn-primary">Visit an Apiary</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MEET THE MAKERS — plain image + copy, alternating, no overlap panel ================= -->
+<section class="story-section" id="story">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center; display:flex;">More Than Just Honey</div>
+      <h2>Meet the Makers</h2>
+      <p>Honey is only half the story.</p>
+    </div>
+
+    <div class="mcards">
+
+      <!-- Row 1: photo right -->
+      <div class="mcard mcard--branch">
+        <img class="mcard-deco" src="assets/vec-branch-hive.png" alt="" aria-hidden="true">
+        <div class="mcard-inner">
+          <div class="mcard-text">
+            <div class="eyebrow">Our Story</div>
+            <h3>How We Started</h3>
+            <p>The Haluska brothers began beekeeping as a hobby in 2021. What started with a few hives became something much bigger.</p>
+            <a href="#" class="btn">Read the Story</a>
+          </div>
+          <div class="mcard-photo">
+            <!-- Alt text softened — can't confirm this shows Brian/Matt specifically, just a beekeeper at the hive -->
+            <img src="assets/IMG_8683-scaled.webp" alt="Recklesstown Honey Beekeeper checking a hive frame">
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2: photo left -->
+      <div class="mcard mcard--honey mcard--reverse">
+        <img class="mcard-deco" src="assets/vec-honey.png" alt="" aria-hidden="true">
+        <div class="mcard-inner">
+          <div class="mcard-text">
+            <div class="eyebrow">Weddings &amp; Events</div>
+            <h3>The Sweetest Favor</h3>
+            <p>Give your guests something to enjoy long after the celebration.</p>
+            <a href="#" class="btn">Explore Gift Sets</a>
+          </div>
+          <div class="mcard-photo">
+            <img src="assets/IMG_0888-768x634.webp" alt="Recklesstown Honey wedding and event favors">
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3: photo right -->
+      <div class="mcard mcard--boxes">
+        <img class="mcard-deco" src="assets/vec-hive-boxes.png" alt="" aria-hidden="true">
+        <div class="mcard-inner">
+          <div class="mcard-text">
+            <div class="eyebrow">School &amp; Youth Programs</div>
+            <h3>Bring the Hive to Your Classroom</h3>
+            <p>Hands-on lessons that stick. Show your students what all the buzz is about.</p>
+            <a href="#" class="btn">Bring Us to School</a>
+          </div>
+          <div class="mcard-photo">
+            <img src="assets/IMG_9582-1-768x1024.webp" alt="Recklesstown Honey school and youth beekeeping program">
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ================= QUOTE (honeycomb texture) ================= -->
+<section class="quote-band">
+  <div class="hexcomb-full"><svg width="100%" height="100%"><rect width="100%" height="100%" fill="url(#hex-fill-gold)"></rect></svg></div>
+  <div class="wrap">
+    <blockquote>&ldquo;Best honey I've had, and I've bought a lot of honey. Grab the wildflower before it sells out at market.&rdquo;</blockquote>
+    <cite>— A regular at the Saturday market (placeholder quote — swap for a real review)</cite>
+  </div>
+</section>
+
+<!-- ================= NEWSLETTER =================
+     SQUARESPACE: this <form> is decorative (onsubmit returns false).
+     Swap for a native Newsletter Block or a Form Block wired to your
+     ESP so it actually collects emails — see MOCKUP NOTES above <body>. -->
+<section class="newsletter">
+  <div class="wrap">
+    <div class="newsletter-box">
+      <div>
+        <h2>Get notified about new batches, events &amp; markets!</h2>
+        <p>We'll email you when a new harvest drops or we announce a hive tour. No spam, just honey.</p>
+      </div>
+      <div>
+        <form class="signup-form" onsubmit="return false;">
+          <input type="email" placeholder="Email address" required>
+          <button type="submit" class="btn btn-primary">Sign Up</button>
+        </form>
+        <p class="fine-print">We respect your privacy. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER (flat dark bg, Cal.com-style layout) ================= -->
+<footer>
+  <div class="wrap footer-top">
+    <div>
+      <div class="footer-logo">
+        <img src="assets/recklesstown_logo.webp" alt="Recklesstown Honey Company"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="footer-logo-fallback">
+          <svg viewBox="0 0 40 40" fill="none"><path d="M20 2L36 11V29L20 38L4 29V11L20 2Z" fill="#D4A83A"/><path d="M20 10L28 14.5V23.5L20 28L12 23.5V14.5L20 10Z" fill="#2B1B12"/></svg>
+          Recklesstown Honey
+        </span>
+      </div>
+      <p class="footer-mission">Our mission is to create unique experiences through the art and science of beekeeping.</p>
+
+      <!-- Placeholder cert/registration badges — text only, swap for the real ones -->
+      <div class="footer-badges">
+        <span class="footer-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/></svg>NJ Apiary Registered</span>
+        <span class="footer-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/></svg>Raw &amp; Unfiltered</span>
+        <span class="footer-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/></svg>Family Owned</span>
+      </div>
+
+      <!-- Simplified brand glyphs for the mockup — swap for official brand assets
+           (Meta/LinkedIn/Google brand resource centers) before this goes live. -->
+      <div class="socials">
+        <a href="#" target="_blank" rel="noopener" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15 4h-1.5A3.5 3.5 0 0 0 10 7.5V10H8v3h2v7h3v-7h2.3l.5-3H13V7.5c0-.3.2-.5.5-.5H15V4Z"/></svg>
+        </a>
+        <a href="https://www.instagram.com/recklesstownhoneyco/" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener" aria-label="Google Business Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="9.5" width="3" height="10.5"/><circle cx="5.5" cy="5.2" r="2"/><path d="M11 9.5h3v1.6c.7-1.1 2-1.9 3.6-1.9 3 0 4.4 2 4.4 5.1V20h-3v-5.3c0-1.4-.5-2.4-1.8-2.4-1 0-1.6.7-1.9 1.3-.1.2-.1.6-.1.9V20h-3V9.5Z"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="footer-wholesale">
+      <div class="footer-wholesale-card">
+        <h4>Wholesale</h4>
+        <a href="#" class="btn btn-primary btn-sm">Apply for a Wholesale Account</a>
+        <a href="#" class="btn btn-outline btn-sm">Wholesale Login</a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>&copy; 2026 Recklesstown Honey Company. All rights reserved.</span>
+    <span>Site mockup only. Not for publication.</span>
+  </div>
+</footer>
+
+<!-- Keeps the store section's honeycomb "spillover" (see .store-hexcurve above)
+     tiling continuously with the hero's honeycomb above it. Both use the exact
+     same unscaled hex-fill-gold pattern, but they're separate SVGs living in
+     separate local coordinate systems, so without this the tile phase would jump
+     at the seam by however many px the hero's own (responsive, variable-height)
+     box happens to be short of a full 38.105px tile. This just measures the
+     hero's real rendered height and shifts the store-side pattern up by the
+     remainder, on load, on resize, and once web fonts finish swapping in
+     (font swap can reflow the hero's height after first paint). -->
+<script>
+(function(){
+  var TILE_H = 38.105;
+  function syncHexPhase(){
+    var hero = document.querySelector('.hero');
+    var rect = document.querySelector('.store-hexcurve .hex-rect');
+    if(!hero || !rect) return;
+    var h = hero.getBoundingClientRect().height;
+    var offset = -(h % TILE_H);
+    rect.style.transform = 'translateY(' + offset + 'px)';
+  }
+  syncHexPhase();
+  window.addEventListener('load', syncHexPhase);
+  window.addEventListener('resize', syncHexPhase);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(syncHexPhase);
+  }
+})();
+</script>
+
+</body>
+</html>
