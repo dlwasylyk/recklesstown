@@ -451,21 +451,21 @@
 <body>
 
 <!-- ============================================================
-     MOCKUP NOTES (remove before handoff):
-     - Images now load from the local assets/ folder (this file lives
+     MOCKUP NOTES:
+     Images currently load from the local assets/ folder (this file lives
        in the project root, sibling to assets/). Logo, hero/footer
        honeycomb, and the "Meet the Makers" trio use real photos.
        .5lb/1lb/2lb product cards use honey_halflb/honey_1lb/honey_2lb
        with the corrected Chestertown, NJ labels.
-     - Header: logo centered with nav split left/right, matching
+     Header: logo centered with nav split left/right, inspired by
        pikeplacefish.com's layout.
-     - "Get Inside the Hive" and "Meet the Makers": plain "feature row"
-       component — one photo, one copy block, side by side, alternating
+     "Get Inside the Hive" and "Meet the Makers": plain "feature row"
+       component w/ one photo, one copy block, side by side, alternating
        left/right down the page. Tried a Pike Place-style dark overlapping
        panel here first, but it didn't suit these particular photos, so
        it's back to a simple split layout. Product photos stayed a plain
        3-up card grid throughout (never used the overlap treatment).
-     - Honeycomb texture, two treatments:
+     Honeycomb texture, two treatments:
          1) Experience promo band keeps a subtle hexagon-OUTLINE
             pattern spread across the whole section (low-opacity,
             reads as texture, not a graphic).
@@ -473,56 +473,54 @@
             two-tone hex pattern across their entire section (no
             band/wave cutoff, no fade mask) — just a flat low-opacity
             layer so text on top stays readable. Footer itself is
-            flat/solid with NO honeycomb (moved to the quote band
-            instead, per your last round of notes).
+            flat/solid with NO honeycomb (moved to the quote band).
+            
        All pattern defs (including the hex tile) live once in the
        hidden <svg> right below <body>, reused via fill="url(#id)".
-     - Footer layout follows the Cal.com reference you shared: one
+     Footer layout follows the Cal.com reference you shared: one
        wide left column (logo, mission statement, placeholder cert
        badges, social icons) plus a right-aligned "Wholesale" card
        with real buttons. Cert badges are text-only placeholders (no
        fabricated logos/claims) — swap in the real ones when ready.
        Social icons are simplified brand glyphs — good enough for
        review, but swap for official brand assets before this ships.
-     - Palette is still a placeholder in the sense that the client
+     Palette is still a placeholder in the sense that the client
        hasn't confirmed playful vs. elegant — but the gold/pale-gold
        values now come directly from recklesstownhoney.com's own
        footer styles, so this should already feel "on brand."
-     - Heading font is DM Sans (was Fraunces) — a quick swap to try
-       a sans-serif heading look; trivial to revert via --font-display.
-
+     Heading font is DM Sans (was originally Fraunces) — a quick swap 
+	   to try a sans-serif heading look; trivial to revert back via 
+	   --font-display.
      SQUARESPACE MIGRATION — what to know going in:
-     - Code Blocks accept plain HTML/CSS(<style>)/JS(<script>), so
+     Code Blocks accept plain HTML/CSS(<style>)/JS(<script>), so
        this design is technically portable, but a Code Block only
-       renders BODY content — <!DOCTYPE>/<html>/<head>/<title>/<meta>
+       renders BODY content: <!DOCTYPE>/<html>/<head>/<title>/<meta>
        get stripped if pasted in directly. Page title + meta
        description belong in Page Settings > SEO; the Google Fonts
        <link> belongs in Settings > Advanced > Code Injection > HEADER
-       (site-wide, loads before paint — see note up in <head>).
-     - The hidden <svg><defs> block right below <body> (the honeycomb
+       (site-wide, loads before paint. See note up in <head>).
+     The hidden <svg><defs> block right below <body> (the honeycomb
        pattern + hex tile) has to physically sit in a Code Block ON
        THE PAGE, not in Header/Footer Code Injection — an <svg> isn't
        valid inside <head>, and every section referencing url(#...)
        needs that <defs> to already be in the rendered DOM above it.
        Simplest: make it the very first Code Block on the page.
-     - Custom CSS (everything in the <style> tag) is cleanest moved
+     Custom CSS (everything in the <style> tag) is cleanest moved
        to Design > Custom CSS as one block, rather than duplicated
-       inside every Code Block — Squarespace's Custom CSS panel has
-       a 128,000-character limit, this file is well under that.
-     - The product cards are static — fine for a marketing homepage,
-       but if you want real add-to-cart, those should become
-       Squarespace's native Product/Summary Blocks (Commerce plan)
-       instead, pulling from an actual Products collection.
-     - The newsletter form (<form onsubmit="return false">) is
-       decorative. Swap it for Squarespace's native Newsletter Block
-       or a Form Block wired to Mailchimp/Klaviyo/etc. for it to
-       actually collect emails.
-     - Images here are plain <img> tags for the mockup; production
+       inside every Code Block. Squarespace's Custom CSS panel has
+       a 128,000-character limit, but we're well under that.
+     Product cards are static, but real add-to-cart will require
+       Squarespace's native Product/Summary Blocks instead, pulling 
+	   from an actual Products collection.
+     The newsletter form (<form onsubmit="return false">) needs to be
+	 swapped for Squarespace's native Newsletter Block or a Form Block 
+	 wired to Mailchimp/Klaviyo/etc.
+     Images are plain <img> tags for the mockup; production
        images should go through Squarespace's own asset manager
        (Image Blocks) so they get automatic responsive srcset/CDN —
        hand-written img tags pointing at a local assets folder won't
        get that.
-     - Bonus assets sitting in assets/ but not used on this page yet:
+     Bonus assets sitting in assets/ but not used on this page yet:
        IMG_6019 (apiary field), honey.jpg, a few 150x150 line icons,
        and briefcase.svg/training.svg (probably meant for Wholesale or
        Experiences sub-pages, not this homepage).
@@ -559,8 +557,8 @@
       <path d="M0,0 L0,0.78 Q0.5,-0.78 1,0.78 L1,0 Z"></path>
     </clipPath>
 
-    <!-- Quote band: a gentle inward scoop on the top and bottom edges (the whole
-         section — background, hex pattern, and text — gets clipped together as
+    <!-- Quote band: gentle inward scoop on the top and bottom edges (the whole
+         section, background, hex pattern, and text — gets clipped together as
          one unit, so the honeycomb pattern is never stretched or re-tiled, just
          given a softer silhouette). Shallow on purpose (~4.5% of the section's
          height) so it stays well clear of the quote text. -->
@@ -660,8 +658,8 @@
 
 <!-- ================= STORE =================
      SQUARESPACE: static cards for now. If real checkout/cart is wanted,
-     rebuild this grid as native Product/Summary Blocks (Commerce plan)
-     instead — see MOCKUP NOTES above <body>. -->
+     rebuild this grid as native Product/Summary Blocks instead, per
+	 MOCKUP NOTES above. -->
 <section class="store" id="shop">
   <div class="store-hexcurve" aria-hidden="true">
     <svg width="100%" height="100%"><rect class="hex-rect" width="100%" height="100%" fill="url(#hex-fill-gold)"></rect></svg>
@@ -743,7 +741,7 @@
   </div>
 </section>
 
-<!-- ================= MEET THE MAKERS — plain image + copy, alternating, no overlap panel ================= -->
+<!-- ================= MEET THE MAKERS: plain image + copy, alternating, no overlap panel ================= -->
 <section class="story-section" id="story">
   <div class="wrap">
     <div class="section-head center">
@@ -765,7 +763,7 @@
             <a href="#" class="btn">Read the Story</a>
           </div>
           <div class="mcard-photo">
-            <!-- Alt text softened — can't confirm this shows Brian/Matt specifically, just a beekeeper at the hive -->
+            <!-- Alt text just a beekeeper at the hive -->
             <img src="assets/IMG_8683-scaled.webp" alt="Recklesstown Honey Beekeeper checking a hive frame">
           </div>
         </div>
@@ -819,7 +817,7 @@
 <!-- ================= NEWSLETTER =================
      SQUARESPACE: this <form> is decorative (onsubmit returns false).
      Swap for a native Newsletter Block or a Form Block wired to your
-     ESP so it actually collects emails — see MOCKUP NOTES above <body>. -->
+     ESP so it actually collects emails (see MOCKUP NOTES). -->
 <section class="newsletter">
   <div class="wrap">
     <div class="newsletter-box">
@@ -852,14 +850,14 @@
       </div>
       <p class="footer-mission">Our mission is to create unique experiences through the art and science of beekeeping.</p>
 
-      <!-- Placeholder cert/registration badges — text only, swap for the real ones -->
+      <!-- Placeholder cert/registration badges: text only, swap for the real ones -->
       <div class="footer-badges">
         <span class="footer-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/></svg>NJ Apiary Registered</span>
         <span class="footer-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/></svg>Raw &amp; Unfiltered</span>
         <span class="footer-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/></svg>Family Owned</span>
       </div>
 
-      <!-- Simplified brand glyphs for the mockup — swap for official brand assets
+      <!-- Simplified brand glyphs for the mockup, swap for official brand assets
            (Meta/LinkedIn/Google brand resource centers) before this goes live. -->
       <div class="socials">
         <a href="#" target="_blank" rel="noopener" aria-label="Facebook">
